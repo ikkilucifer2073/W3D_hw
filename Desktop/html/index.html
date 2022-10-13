@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+<style>
+<title>I4A46黃資雅</title>
+
+</style>
+
+
+<body> 
+<h1> I4A46-Hw1</h1>
+<h2> 410806146黃資雅</h2>
+<h2> email: ikkilucifer2073@gmail.com</h2>
+<button id='power'>Power</button>
+<div id='bkgd' style="position:absolute;left:0vw;width:50vw;height:139vh;background-image:url('tree.png');"></div>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+</head>
+<script>
+var powerOn = true;
+
+$('#power').click (function() {
+  powerOn = !powerOn;
+  
+  if (powerOn === true) {  // false--> true
+     lamps.forEach (function(item) {item.startBlink();});
+  }
+  else{
+	powerOn = false;
+	this.myStatus = false;
+	lamps.forEach (function(item) {item.startBlink();});
+  }
+});
+/*clip-path:polygon(50% 10%, 0% 80%,75% 80%);*/
+class Lamp {
+
+  constructor(name) {
+    this.name = name + Lamp.id++;
+    this.myStatus = false;
+    
+    let el = document.createElement ('div');
+    el.id = this.name;
+    //let text = document.createTextNode (name + ' is OFF');
+    //el.appendChild(text);
+    let bkgd = document.getElementById('bkgd');
+    bkgd.appendChild(el);
+    this.hue = Math.random()*360;
+
+    // styles
+    el.setAttribute ("style", `background-color: hsl(${this.hue}, 90%, 50%);width:30px;height:30px;border-radius: 80px;`);
+    this.left = Math.random()*0.9;
+	this.right = Math.random()*1.4;
+    this.top = Math.random()*0.8;
+	this.bottom = Math.random()*0.9;
+    el.style.position = "absolute";
+	el.style.right = this.right*49 + '%'; 
+    //el.style.left = this.left*50 + '%'; 
+    //el.style.top = this.top*85 + '%';
+	el.style.bottom = this.bottom*85 + '%';
+  }
+
+  toggle() {
+    this.myStatus = ! this.myStatus;
+    
+    if (powerOn) {
+       setTimeout (()=>{this.toggle();}, 1500);
+    }
+    
+    if (this.myStatus === true) {
+      $('#'+this.name).css('backgroundColor', `hsl(${this.hue},90%,80%)`);
+    } else {
+      $('#'+this.name).css('backgroundColor', `hsl(${this.hue},90%,24%)`);
+    }
+  }
+
+  startBlink() {
+    var that = this;
+	if (powerOn) {
+    setInterval(function() {
+      that.toggle();
+    }, 3600);
+	
+   setTimeout (()=>{ this.toggle(); }, 1560);
+     
+    setInterval (that.toggle(), 2800);   // somehow, it does not work
+  }
+  }
+}
+
+
+Lamp.id = 0; // class variable
+lamps = [];
+
+for (let i = 0; i < 20; i++) {
+   let ll = new Lamp ('light');
+   lamps.push (ll);
+}
+
+lamps.forEach ( function(ll) {ll.startBlink();} );
+
+</script>
+</body>
+
+</html>
