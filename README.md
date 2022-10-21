@@ -7,6 +7,6 @@
 
 :heavy_check_mark:[HW1](https://ikkilucifer2073.github.io/W3D_hw/hw1.html)
 
-:no_entry:HW2
+:heavy_check_mark:[HW2](https://ikkilucifer2073.github.io/W3D_hw/hw2.html)
 
 :no_entry:HW3
