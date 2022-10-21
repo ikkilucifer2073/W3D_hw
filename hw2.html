@@ -96,77 +96,76 @@
       <h1>I4A46黃資雅-HW2</h1>
     </div>
     <div class="block1">
-      <h1>V</h1>
-	  <h1>_____________________</h1>
-	  <h1 class="text2">X<input type="text" id="x1" onblur="vwDot();"></h1>
-	  <h1 class="text2">Y<input type="text" id="y1" onblur="vwDot();"></h1>
-	  <h1 class="text2">Z<input type="text" id="z1" onblur="vwDot();"></h1>
+		<form>
+		<h1>V</h1>
+		<h1>_____________________</h1>
+		<label>X</label>
+		<input type="text" id="x1" onblur="vw();"><br>
+		<label>Y</label>
+		<input type="text" id="y1" onblur="vw();"><br>
+		<label>Z</label>
+		<input type="text" id="z1" onblur="vw();"><br>
+		</form> 
     </div>
 
     <div class="block2">
-      <h1>W</h1>
-	  <h1>_____________________</h1>
-	  <h1 class="text2">X<input type="text" id="x2" onblur="vwCross();"></h1>
-	  <h1 class="text2">Y<input type="text" id="y2" onblur="vwCross();"></h1>
-	  <h1 class="text2">Z<input type="text" id="z2" onblur="vwCross();"></h1>
+      <form>
+		<h1>W</h1>
+		<h1>_____________________</h1>
+		<label>X</label>
+		<input type="text" id="x2" onblur="vw();"><br>
+		<label>Y</label>
+		<input type="text" id="y2" onblur="vw();"><br>
+		<label>Z</label>
+		<input type="text" id="z2" onblur="vw();"><br>
+		</form> 
+
     </div>
 	
     <div class="block3">
-      <h1>inner product</h1>
-	  <h1>_____________________</h1>
-	  <h1 class="text2">V &#8226; W<input type="text" id="vw_dot"></h1>
-	  <br><br><br><br><br><br><br><br><br>
-	  <br><br><br><br><br><br><br><br><br>
-	  <h1>V &#215; W(vector product)</h1>
-	  <h1>_____________________</h1>
-	  <h1 class="text2">X<input type="text" id="x3"></h1>
-	  <h1 class="text2">Y<input type="text" id="y3"></h1>
-	  <h1 class="text2">Z<input type="text" id="z3"></h1>
+	  <form>
+		<h1>inner product</h1>
+		<h1>_____________________</h1>
+		<label>V &#8226; W</label>
+		<input type="text" id="vw_dot"><br>
+	   <br><br><br><br><br><br><br><br><br>
+	   <h1>V &#215; W(vector product)</h1>
+	   <h1>_____________________</h1>
+	   <h1 class="text2">X<input type="text" id="x3"></h1>
+	   <h1 class="text2">Y<input type="text" id="y3"></h1>
+	   <h1 class="text2">Z<input type="text" id="z3"></h1>
+	  </form>
     </div>
 	
-	<script src="https://threejs.org/build/three.min.js"></script>
-	<script>
-		function vwDot{
-	
-			var x1 = parseFloat(document.getElementById("x1").value);
-			var y1 = parseFloat(document.getElementById("y1").value);
-			var z1 = parseFloat(document.getElementById("z1").value);
-			
-			var x2 = parseFloat(document.getElementById("x2").value);
-			var y2 = parseFloat(document.getElementById("y2").value);
-			var z2 = parseFloat(document.getElementById("z2").value);
-			
-			var v = new THREE.Vector3(x1,y1,z1);
-			var w = new THREE.Vector3(x2,y2,z2);
-			var vw_dot = new THREE.Vector3();
-			
-			vw_dot = v.dot(w);
-			console.log(vw_dot);
-			document.getElementById("vw_dot").value = vw_dot;
-		
-		};
-		function vwCross{
-			var x1 = parseFloat(document.getElementById("x1").value);
-			var y1 = parseFloat(document.getElementById("y1").value);
-			var z1 = parseFloat(document.getElementById("z1").value);
-			
-			var x2 = parseFloat(document.getElementById("x2").value);
-			var y2 = parseFloat(document.getElementById("y2").value);
-			var z2 = parseFloat(document.getElementById("z2").value);
-			
-			var v = new THREE.Vector3(x1,y1,z1);
-			var w = new THREE.Vector3(x2,y2,z2);
-			var vw_cross = new THREE.Vector3();
-			
-			vw_cross = v.cross(w);
-			console.log(vw_cross);
-			document.getElementById("x3").value = vw_cross.x;
-			document.getElementById("y3").value = vw_cross.y;
-			document.getElementById("z3").value = vw_cross.z;
+<script src="https://threejs.org/build/three.min.js"></script>
+<script>
+	function vw(){
 
-		};
-	</script>
-	
+		var x1 = parseFloat(document.getElementById('x1').value);
+		var y1 = parseFloat(document.getElementById('y1').value);
+		var z1 = parseFloat(document.getElementById('z1').value);
+		
+		var x2 = parseFloat(document.getElementById('x2').value);
+		var y2 = parseFloat(document.getElementById('y2').value);
+		var z2 = parseFloat(document.getElementById('z2').value);
+		
+		const v = new THREE.Vector3(x1,y1,z1);
+		const w = new THREE.Vector3(x2,y2,z2);
+		const temp=v.clone();
+		
+		var vw_dot = new THREE.Vector3();
+		vw_dot = temp.dot(w);
+
+		var vw_cross = new THREE.Vector3();
+		vw_cross = temp.cross(w);
+		
+		document.getElementById('vw_dot').value = vw_dot;
+		document.getElementById('x3').value = vw_cross.x;
+		document.getElementById('y3').value = vw_cross.y;
+		document.getElementById('z3').value = vw_cross.z;
+	}
+</script>
+
   </body>
 
 </html>
