@@ -1,0 +1,158 @@
+
+<div id="info">I4A46-Art Gallery</div>
+<script src="https://threejs.org/build/three.min.js"></script>
+<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+
+
+<script>
+var camera, scene, renderer;
+var frame;
+
+init();
+animate();
+
+function init() {
+
+  renderer = new THREE.WebGLRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setClearColor(0xcccccc);
+  document.body.appendChild(renderer.domElement);
+
+  scene = new THREE.Scene();
+
+  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
+  camera.position.z = 2000;
+
+  let controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+  ////////////////////////////////////////////////////////////
+  frame = new THREE.Object3D();
+  scene.add(frame);
+
+  var wall_right = new THREE.BoxGeometry(10, 300, 1107);
+  var wall_up = new THREE.BoxGeometry(1324, 300, 10);
+  var floor = new THREE.BoxGeometry(1324, 10, 1107);
+  material = new THREE.MeshLambertMaterial();
+  //四周
+  var mesh = new THREE.Mesh(wall_right, material);
+  var mesh2 = mesh.clone();
+  mesh.position.set(-667, 150, 0);
+  mesh2.position.set(667, 150, 0);
+  var mesh3 = new THREE.Mesh(wall_up, material);
+  var mesh4 = mesh3.clone();
+  mesh3.position.set(0, 150, -553.5);
+  mesh4.position.set(0, 150, 553.5);
+  var mesh1 = new THREE.Mesh(floor, material);
+  mesh1.position.set(0, 0, 0);
+
+  //四周END
+
+  //隔間牆
+
+  var partition_wall1 = new THREE.BoxGeometry(426.3, 300, 10);
+  var mesh5 = new THREE.Mesh(partition_wall1, material);
+  mesh5.position.set(-453.5, 150, -219.47);
+
+  var partition_wall2 = new THREE.BoxGeometry(10, 300, 470);
+  var mesh6 = new THREE.Mesh(partition_wall2, material);
+  mesh6.position.set(48, 150, -320);
+
+  var partition_wall3 = new THREE.BoxGeometry(426.3, 300, 10);
+  var mesh7 = new THREE.Mesh(partition_wall3, material);
+  mesh7.position.set(-83.5, 150, 120);
+
+
+  var partition_wall4 = new THREE.BoxGeometry(10, 300, 426.3);
+  var mesh8 = new THREE.Mesh(partition_wall4, material);
+  mesh8.position.set(44.5, 150, 340);
+
+  var partition_wall5 = new THREE.BoxGeometry(426.3, 300, 10);
+  var mesh9 = new THREE.Mesh(partition_wall5, material);
+  mesh9.position.set(453.5, 150, 120);
+
+
+  var chair = buildChair();
+
+  var chair1 = chair.clone();
+  chair1.position.set(326.75, 0, -270);
+  chair1.rotation.y = Math.PI / 2;
+  var chair2 = chair.clone();
+  chair2.position.set(-350, 0, 300);
+  var chair3 = chair.clone();
+  chair3.position.set(-165, 0, 300);
+  var chair4 = chair.clone();
+  chair4.position.set(375, 0, 320);
+  scene.add(chair1, chair2, chair3, chair4);
+
+
+
+  frame.add(mesh, mesh1, mesh2, mesh3, mesh4, mesh5, mesh6, mesh7, mesh8, mesh9);
+
+
+
+  eyeCamera = new THREE.PerspectiveCamera(120, window.innerWidth / window.innerHeight, 1, 1000);
+
+  var gridXZ = new THREE.GridHelper(600, 30, 'red', 'white');
+  scene.add(gridXZ);
+
+
+
+  var drawing = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), new THREE.MeshBasicMaterial({
+    color: "blue"
+  }));
+  drawing.position.set(657, 170, 0);
+  drawing.rotation.y = -Math.PI / 2;
+  scene.add(drawing);
+
+  eyeCamera.position.set(0, 170, 0);
+  eyeCamera.lookAt(300, 170, 0);
+
+  const pointLight = new THREE.PointLight(0xffffff, 1);
+  pointLight.position.set(0, 400, 0);
+  scene.add(pointLight);
+
+  const sphereSize = 3;
+  const pointLightHelper = new THREE.PointLightHelper(pointLight, sphereSize);
+  scene.add(pointLightHelper);
+
+  spotLight = new THREE.SpotLight(0xffffff, 1, 250, Math.PI / 6, 0.974);
+  spotLight.position.set(657, 300, 0);
+  spotLight.target = drawing;
+  scene.add(spotLight);
+
+  spotLightHelper = new THREE.SpotLightHelper(spotLight);
+  scene.add(spotLightHelper);
+
+
+
+
+}
+
+function buildChair() {
+  var group = new THREE.Group();
+  var woodTex = new THREE.TextureLoader().load("https://i.imgur.com/DrvlmNW.jpg?1");
+  var mat = new THREE.MeshLambertMaterial({
+    map: woodTex
+  });
+  var boxTop = new THREE.Mesh(new THREE.BoxGeometry(165, 15, 45), mat);
+  var boxLeg1 = new THREE.Mesh(new THREE.BoxGeometry(15, 45, 45), mat);
+  var boxLeg2 = new THREE.Mesh(new THREE.BoxGeometry(15, 45, 45), mat);
+  boxTop.position.set(0, 30, 0);
+  boxLeg1.position.set(-82.5, 15, 0);
+  boxLeg2.position.set(82.5, 15, 0);
+  group.add(boxTop, boxLeg1, boxLeg2);
+  return group;
+}
+
+function animate() {
+
+  requestAnimationFrame(animate);
+  render();
+}
+
+function render() {
+  frame.rotation.y = 0;
+  renderer.render(scene, camera);
+}
+
+</script>
