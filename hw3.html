@@ -1,4 +1,5 @@
 
+
 <div id="info">I4A46-Art Gallery</div>
 <script src="https://threejs.org/build/three.min.js"></script>
 <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
@@ -29,32 +30,78 @@ function init() {
   frame = new THREE.Object3D();
   scene.add(frame);
 
+
+  let loader = new THREE.TextureLoader();
+  loader.crossOrigin = ''
+  wall_texture = loader.load('https://i.imgur.com/azYch16.jpg');
+  wall_texture.wrapS = THREE.RepeatWrapping;
+  wall_texture.wrapT = THREE.RepeatWrapping;
+  wall_texture.repeat.set(8, 1);
+  var texture1 = new THREE.MeshPhongMaterial({
+    map: wall_texture,
+    alphaTest: 0.5,
+    side: THREE.DoubleSide
+  });
+
+
+  floor_texture = loader.load('https://i.imgur.com/aa93xcP.jpg');
+  floor_texture.wrapS = THREE.RepeatWrapping;
+  floor_texture.wrapT = THREE.RepeatWrapping;
+  floor_texture.repeat.set(8, 8);
+  var texture2 = new THREE.MeshPhongMaterial({
+    map: floor_texture,
+    alphaTest: 0.5,
+    side: THREE.DoubleSide
+  });
+
+
+
+
+
+
   var wall_right = new THREE.BoxGeometry(10, 300, 1107);
   var wall_up = new THREE.BoxGeometry(1324, 300, 10);
   var floor = new THREE.BoxGeometry(1324, 10, 1107);
   material = new THREE.MeshLambertMaterial();
   //四周
-  var mesh = new THREE.Mesh(wall_right, material);
+  var mesh = new THREE.Mesh(wall_right, texture1);
   var mesh2 = mesh.clone();
   mesh.position.set(-667, 150, 0);
   mesh2.position.set(667, 150, 0);
-  var mesh3 = new THREE.Mesh(wall_up, material);
+  var mesh3 = new THREE.Mesh(wall_up, texture1);
   var mesh4 = mesh3.clone();
   mesh3.position.set(0, 150, -553.5);
   mesh4.position.set(0, 150, 553.5);
-  var mesh1 = new THREE.Mesh(floor, material);
+  var mesh1 = new THREE.Mesh(floor, texture2);
   mesh1.position.set(0, 0, 0);
+
+
+
+
+
+
+
 
   //四周END
 
   //隔間牆
-
+	partition_wall1_texture = loader.load('https://i.imgur.com/DMpCwmC.jpg');
+  partition_wall1_texture.wrapS = THREE.RepeatWrapping;
+  partition_wall1_texture.wrapT = THREE.RepeatWrapping;
+  partition_wall1_texture.repeat.set(1, 1);
+  var texture3 = new THREE.MeshPhongMaterial({
+    map: partition_wall1_texture,
+    alphaTest: 0.5,
+    side: THREE.DoubleSide
+  });
+  
   var partition_wall1 = new THREE.BoxGeometry(426.3, 300, 10);
-  var mesh5 = new THREE.Mesh(partition_wall1, material);
+  var mesh5 = new THREE.Mesh(partition_wall1, texture3);
   mesh5.position.set(-453.5, 150, -219.47);
+  
 
   var partition_wall2 = new THREE.BoxGeometry(10, 300, 470);
-  var mesh6 = new THREE.Mesh(partition_wall2, material);
+  var mesh6 = new THREE.Mesh(partition_wall2, texture1);
   mesh6.position.set(48, 150, -320);
 
   var partition_wall3 = new THREE.BoxGeometry(426.3, 300, 10);
@@ -90,41 +137,74 @@ function init() {
 
 
 
-  eyeCamera = new THREE.PerspectiveCamera(120, window.innerWidth / window.innerHeight, 1, 1000);
-
-  var gridXZ = new THREE.GridHelper(600, 30, 'red', 'white');
-  scene.add(gridXZ);
+  eyeCamera = new THREE.PerspectiveCamera(1200, window.innerWidth / window.innerHeight, 1, 1000);
 
 
 
-  var drawing = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), new THREE.MeshBasicMaterial({
+
+
+  var drawing1 = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), new THREE.MeshBasicMaterial({
     color: "blue"
   }));
-  drawing.position.set(657, 170, 0);
-  drawing.rotation.y = -Math.PI / 2;
-  scene.add(drawing);
+  drawing1.position.set(657, 170, 0);
+  drawing1.rotation.y = -Math.PI / 2;
+  
+  
+  var drawing2 = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), new THREE.MeshBasicMaterial({
+    color: "pink"
+  }));
+  drawing2.position.set(56, 170, -220);
+  drawing2.rotation.y = Math.PI / 2;
+  
+  
+  
+  scene.add(drawing1,drawing2);
 
   eyeCamera.position.set(0, 170, 0);
   eyeCamera.lookAt(300, 170, 0);
 
-  const pointLight = new THREE.PointLight(0xffffff, 1);
-  pointLight.position.set(0, 400, 0);
-  scene.add(pointLight);
+//pointlight
+  const pointLight1 = new THREE.PointLight(0xffffff, 0.71);
+  pointLight1.position.set(257, 150, 300);
+  
+  const pointLight2 = new THREE.PointLight(0xffffff, 0.71);
+  pointLight2.position.set(-157, 200, -315);
+  
+  
+  
+  
+  
+  scene.add(pointLight1,pointLight2);
 
-  const sphereSize = 3;
-  const pointLightHelper = new THREE.PointLightHelper(pointLight, sphereSize);
-  scene.add(pointLightHelper);
-
-  spotLight = new THREE.SpotLight(0xffffff, 1, 250, Math.PI / 6, 0.974);
-  spotLight.position.set(657, 300, 0);
-  spotLight.target = drawing;
+  const sphereSize = 10;
+  const pointLightHelper1 = new THREE.PointLightHelper(pointLight1, sphereSize);
+  const pointLightHelper2 = new THREE.PointLightHelper(pointLight2, sphereSize);
+  scene.add(pointLightHelper1,pointLightHelper2);
+  
+//pointlightEND  
+  
+  
+  
+  
+  
+//spotlight
+  spotLight = new THREE.SpotLight(0xffffff, 10, 260, Math.PI / 10, 0.5);
+  spotLight.position.set(-260, 200, -260);
+  spotLight.target = drawing2;
   scene.add(spotLight);
 
   spotLightHelper = new THREE.SpotLightHelper(spotLight);
   scene.add(spotLightHelper);
 
 
+//spotlightEND
 
+
+
+
+
+  //spotLightHelper = new THREE.SpotLightHelper(spotLight);
+  //scene.add(spotLightHelper);
 
 }
 
@@ -154,5 +234,4 @@ function render() {
   frame.rotation.y = 0;
   renderer.render(scene, camera);
 }
-
 </script>
