@@ -1,5 +1,4 @@
 
-
 <div id="info">I4A46-Art Gallery</div>
 <script src="https://threejs.org/build/three.min.js"></script>
 <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
@@ -36,7 +35,7 @@ function init() {
   wall_texture = loader.load('https://i.imgur.com/azYch16.jpg');
   wall_texture.wrapS = THREE.RepeatWrapping;
   wall_texture.wrapT = THREE.RepeatWrapping;
-  wall_texture.repeat.set(8, 1);
+  wall_texture.repeat.set(10, 1);
   var texture1 = new THREE.MeshPhongMaterial({
     map: wall_texture,
     alphaTest: 0.5,
@@ -85,7 +84,7 @@ function init() {
   //四周END
 
   //隔間牆
-	partition_wall1_texture = loader.load('https://i.imgur.com/DMpCwmC.jpg');
+  partition_wall1_texture = loader.load('https://i.imgur.com/DMpCwmC.jpg');
   partition_wall1_texture.wrapS = THREE.RepeatWrapping;
   partition_wall1_texture.wrapT = THREE.RepeatWrapping;
   partition_wall1_texture.repeat.set(1, 1);
@@ -94,27 +93,27 @@ function init() {
     alphaTest: 0.5,
     side: THREE.DoubleSide
   });
-  
+
   var partition_wall1 = new THREE.BoxGeometry(426.3, 300, 10);
   var mesh5 = new THREE.Mesh(partition_wall1, texture3);
   mesh5.position.set(-453.5, 150, -219.47);
-  
+
 
   var partition_wall2 = new THREE.BoxGeometry(10, 300, 470);
   var mesh6 = new THREE.Mesh(partition_wall2, texture1);
   mesh6.position.set(48, 150, -320);
 
   var partition_wall3 = new THREE.BoxGeometry(426.3, 300, 10);
-  var mesh7 = new THREE.Mesh(partition_wall3, material);
+  var mesh7 = new THREE.Mesh(partition_wall3, texture1);
   mesh7.position.set(-83.5, 150, 120);
 
 
   var partition_wall4 = new THREE.BoxGeometry(10, 300, 426.3);
-  var mesh8 = new THREE.Mesh(partition_wall4, material);
+  var mesh8 = new THREE.Mesh(partition_wall4, texture1);
   mesh8.position.set(44.5, 150, 340);
 
   var partition_wall5 = new THREE.BoxGeometry(426.3, 300, 10);
-  var mesh9 = new THREE.Mesh(partition_wall5, material);
+  var mesh9 = new THREE.Mesh(partition_wall5, texture1);
   mesh9.position.set(453.5, 150, 120);
 
 
@@ -143,51 +142,103 @@ function init() {
 
 
 
-  var drawing1 = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), new THREE.MeshBasicMaterial({
-    color: "blue"
+  var door = new THREE.Mesh(new THREE.PlaneGeometry(180, 300), new THREE.MeshBasicMaterial({
+    map: loader.load('https://i.imgur.com/fZweZbw.png')
+  }));
+  door.position.set(-500, 150, -544);
+  //door.rotation.y = Math.PI / 2;
+
+
+
+  var drawing1 = new THREE.Mesh(new THREE.PlaneGeometry(120, 160), new THREE.MeshBasicMaterial({
+    map: loader.load('https://i.imgur.com/SMEXIFy.jpg')
   }));
   drawing1.position.set(657, 170, 0);
   drawing1.rotation.y = -Math.PI / 2;
-  
-  
-  var drawing2 = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), new THREE.MeshBasicMaterial({
-    color: "pink"
+
+
+  var drawing2 = new THREE.Mesh(new THREE.PlaneGeometry(150, 180), new THREE.MeshBasicMaterial({
+    map: loader.load('https://i.imgur.com/WuAmhJb.jpg')
   }));
   drawing2.position.set(56, 170, -220);
   drawing2.rotation.y = Math.PI / 2;
+
+  var drawing3 = new THREE.Mesh(new THREE.PlaneGeometry(150, 180), new THREE.MeshBasicMaterial({
+    map: loader.load('https://i.imgur.com/cBf9qDO.jpg')
+  }));
+  drawing3.position.set(400, 170, -540);
+  //drawing3.rotation.y = Math.PI / 2;
+  
+  var drawing4 = new THREE.Mesh(new THREE.PlaneGeometry(150, 180), new THREE.MeshBasicMaterial({
+    map: loader.load('https://i.imgur.com/Cz4UsFx.jpg')
+  }));
+  drawing4.position.set(-150, 170, 135);
+  //drawing3.rotation.y = Math.PI / 2;
   
   
+  var drawing5 = new THREE.Mesh(new THREE.PlaneGeometry(120, 160), new THREE.MeshBasicMaterial({
+    map: loader.load('https://i.imgur.com/pZVKiKq.jpg')
+  }));
+  drawing5.position.set(-657, 170, 0);
+  drawing5.rotation.y = Math.PI / 2;
   
-  scene.add(drawing1,drawing2);
+   var drawing6 = new THREE.Mesh(new THREE.PlaneGeometry(150, 180), new THREE.MeshBasicMaterial({
+    map: loader.load('https://i.imgur.com/XwTCBRC.jpg')
+  }));
+  drawing6.position.set(56, 170, 320);
+  drawing6.rotation.y = Math.PI / 2;
+  
+  var drawing7 = new THREE.Mesh(new THREE.PlaneGeometry(130, 150), new THREE.MeshBasicMaterial({
+    map: loader.load('https://i.imgur.com/fOScTP4.jpg')
+  }));
+  drawing7.position.set(420, 170, 135);
+  
+  var drawing8 = new THREE.Mesh(new THREE.PlaneGeometry(150, 180), new THREE.MeshBasicMaterial({
+    map: loader.load('https://i.imgur.com/r8O0bAP.jpg')
+  }));
+  drawing8.position.set(400, 170, 540);
+  
+  drawing8.rotation.y = 2*Math.PI / 2;
+
+
+
+  scene.add(door, drawing1, drawing2, drawing3, drawing4, drawing5, drawing6, drawing7, drawing8);
 
   eyeCamera.position.set(0, 170, 0);
   eyeCamera.lookAt(300, 170, 0);
 
-//pointlight
+  //pointlight
   const pointLight1 = new THREE.PointLight(0xffffff, 0.71);
-  pointLight1.position.set(257, 150, 300);
-  
+  pointLight1.position.set(257, 200, 300);
+
   const pointLight2 = new THREE.PointLight(0xffffff, 0.71);
-  pointLight2.position.set(-157, 200, -315);
-  
-  
-  
-  
-  
-  scene.add(pointLight1,pointLight2);
+  pointLight2.position.set(157, 200, -315);
+
+  const pointLight3 = new THREE.PointLight(0xffffff, 0.71);
+  pointLight3.position.set(-257, 200, 315);
+  const pointLight4 = new THREE.PointLight(0xffffff, 0.71);
+  pointLight3.position.set(-257, -100, 315);
+
+
+
+
+
+  scene.add(pointLight1, pointLight2, pointLight3, pointLight4);
 
   const sphereSize = 10;
   const pointLightHelper1 = new THREE.PointLightHelper(pointLight1, sphereSize);
   const pointLightHelper2 = new THREE.PointLightHelper(pointLight2, sphereSize);
-  scene.add(pointLightHelper1,pointLightHelper2);
-  
-//pointlightEND  
-  
-  
-  
-  
-  
-//spotlight
+  const pointLightHelper3 = new THREE.PointLightHelper(pointLight3, sphereSize);
+  const pointLightHelper4 = new THREE.PointLightHelper(pointLight3, sphereSize);
+  scene.add(pointLightHelper1, pointLightHelper2, pointLightHelper3, pointLightHelper4);
+
+  //pointlightEND  
+
+
+
+
+
+  //spotlight
   spotLight = new THREE.SpotLight(0xffffff, 10, 260, Math.PI / 10, 0.5);
   spotLight.position.set(-260, 200, -260);
   spotLight.target = drawing2;
@@ -197,29 +248,31 @@ function init() {
   scene.add(spotLightHelper);
 
 
-//spotlightEND
+  //spotlightEND
 
 
 
 
 
-  //spotLightHelper = new THREE.SpotLightHelper(spotLight);
-  //scene.add(spotLightHelper);
 
 }
 
 function buildChair() {
   var group = new THREE.Group();
-  var woodTex = new THREE.TextureLoader().load("https://i.imgur.com/DrvlmNW.jpg?1");
+  var woodTex = new THREE.TextureLoader().load("https://i.imgur.com/dYDPulR.jpg");
   var mat = new THREE.MeshLambertMaterial({
     map: woodTex
   });
-  var boxTop = new THREE.Mesh(new THREE.BoxGeometry(165, 15, 45), mat);
+  var leatherTex = new THREE.TextureLoader().load("https://i.imgur.com/9gVSVRy.jpg");
+  var leather = new THREE.MeshLambertMaterial({
+    map: leatherTex
+  });
+  var boxTop = new THREE.Mesh(new THREE.BoxGeometry(165, 15, 45), leather);
   var boxLeg1 = new THREE.Mesh(new THREE.BoxGeometry(15, 45, 45), mat);
   var boxLeg2 = new THREE.Mesh(new THREE.BoxGeometry(15, 45, 45), mat);
-  boxTop.position.set(0, 30, 0);
-  boxLeg1.position.set(-82.5, 15, 0);
-  boxLeg2.position.set(82.5, 15, 0);
+  boxTop.position.set(0, 35, 0);
+  boxLeg1.position.set(-82.5, 20, 0);
+  boxLeg2.position.set(82.5, 20, 0);
   group.add(boxTop, boxLeg1, boxLeg2);
   return group;
 }
@@ -234,4 +287,7 @@ function render() {
   frame.rotation.y = 0;
   renderer.render(scene, camera);
 }
+
+
+
 </script>
