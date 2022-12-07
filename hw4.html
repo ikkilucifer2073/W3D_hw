@@ -1,0 +1,242 @@
+
+<h1 style="font-size:2em; text-align:center; margin:15px">
+  HW4-I4A46
+</h1>
+
+<hr>
+
+<div id="container">
+</div>
+
+<div style="width:30vw;float:left; margin:10px;background-color:yellow">
+  <input type=radio class='gclass' id='placing' name='g' value='place' checked> Place chair <br>
+  <input type=radio class='gclass' name='g' value='delete'> Place table<br>
+  <button id='save'>Save</button><br>
+  <button id='clear'>Clear</button><br>
+  <p id='debugMsg'>
+  </p>
+</div>
+
+<script src="https://threejs.org/build/three.min.js"></script>
+<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<style>
+#container {
+  width: 60vw;
+  height: 60vw;
+  float: left;
+  background-color: pink;
+  margin: 10px;
+}
+
+p {
+  margin: 10px;
+  text-align: justify;
+}
+
+</style>
+
+<script>
+var scene, renderer, camera;
+var plane, puck;
+var mouse = new THREE.Vector2();
+var raycaster = new THREE.Raycaster();
+var pucks = [];
+var puckId = 0;
+init();
+animate();
+$('#gclass').click(function() {
+  if ($(this).val() === 'place')
+    placing = true;
+  else // delete
+    placing = false;
+});
+
+$('#save').click( function() {
+
+  // pucks --> puckRecs
+  var recs = [];
+  for (let i = 0; i < pucks.length; i++) {
+    var rec = {};
+    rec.name = pucks[i].name;
+    rec.x = pucks[i].position.x.toFixed(2);
+    rec.z = pucks[i].position.z.toFixed(2);
+    recs.push(rec);
+  }
+
+  // puckRecs --> JSON.stringify --> localStorage
+  var recLog = JSON.stringify(recs);
+  localStorage.setItem('puckLog', recLog);
+
+});
+
+$('#clear').click( function() {
+
+  pucks.forEach( function(puck) {
+    puck.removeFromParent();
+  })
+
+  pucks = [];
+});
+
+
+
+function init() {
+
+  renderer = new THREE.WebGLRenderer({
+    antialias: true
+  });
+  var ww = $('#container').innerWidth();
+  var hh = $('#container').innerHeight();
+  renderer.setSize(ww, hh);
+  renderer.setClearColor(0x555555);
+  $('#container').append(renderer.domElement);
+
+  scene = new THREE.Scene();
+
+  camera = new THREE.PerspectiveCamera(45, ww / hh, 1, 10000);
+  camera.position.set (0, 80, 200)
+  camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+  var cyl_geom = new THREE.CylinderGeometry(10, 10, 6, 32);
+  var cyl_mat = new THREE.MeshNormalMaterial();
+  puck = new THREE.Mesh(cyl_geom, cyl_mat);
+
+  let controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+  //var gridXZ = new THREE.GridHelper(200, 20, 'red', 'white');
+  //scene.add(gridXZ);
+
+  // build an invisible plane, overlapping the grid
+  plane = new THREE.Mesh(
+    new THREE.PlaneBufferGeometry(200, 200, 8, 8),
+    new THREE.MeshBasicMaterial({
+      //color: 0xff0000,
+      //opacity: 0.25
+      //transparent: true
+    }));
+    
+    var loader = new THREE.TextureLoader();
+  var floorGroup = new THREE.Group();
+  var grassMap = loader.load('https://i.imgur.com/6O3MEXk.jpg');
+  //grassMap.wrapS = THREE.RepeatWrapping;
+  //grassMap.wrapT = THREE.RepeatWrapping;
+  //grassMap.repeat.set(8, 8);
+  var grassAlpha = loader.load('https://i.imgur.com/mGdIosi.png?1');
+  
+  
+  
+  var grassFloor = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshBasicMaterial({
+    map: grassMap,
+    transparent: true,
+    alphaMap: grassAlpha
+  }));
+  
+
+  var stoneMap = loader.load('https://i.imgur.com/42gm9hj.jpg');
+  //stoneMap.wrapS = THREE.RepeatWrapping;
+  //stoneMap.wrapT = THREE.RepeatWrapping;
+  //stoneMap.repeat.set(1, 1);
+  var stoneAlpha = loader.load('https://i.imgur.com/D9alJjG.png');
+  var stoneFloor = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshBasicMaterial({
+    map: stoneMap,
+    transparent: true,
+    alphaMap: stoneAlpha
+  }));
+  floorGroup.add(grassFloor, stoneFloor);
+  scene.add(floorGroup);
+   floorGroup.rotation.x = -Math.PI / 2;
+    
+    
+    
+    
+  plane.rotation.x = -Math.PI / 2;
+  plane.material.visible = false; // invisible, for picking only
+  scene.add(plane);
+
+  window.addEventListener('resize', onWindowResize, false);
+  $('#container').on("pointerdown", onDocumentMouseDown);
+  //window.addEventListener('mousemove', onDocumentMouseMove, false);
+}
+
+function onWindowResize() {
+  var ww = $('#container').innerWidth();
+  var hh = $('#container').innerHeight();
+  camera.aspect = ww / hh;
+  camera.updateProjectionMatrix();
+  renderer.setSize(ww, hh);
+}
+
+function onDocumentMouseDown(event) {
+
+  var viewportPos = $('#container').get(0).getBoundingClientRect();
+  mouse.x = ((event.clientX - viewportPos.left) / $('#container').innerWidth()) * 2 - 1;
+  mouse.y = -((event.clientY - viewportPos.top) / $('#container').innerHeight()) * 2 + 1;
+	
+  
+  
+  
+
+  raycaster.setFromCamera(mouse, camera);
+  var intersects = raycaster.intersectObject(plane);
+  if (intersects.length > 0) {
+    var newPuck = puck.clone();
+    newPuck.position.copy(intersects[0].point);
+
+    newPuck.name = 'puck' + puckId++;
+
+    scene.add(newPuck);
+    pucks.push(newPuck);
+    
+    
+    
+    
+    
+    
+    
+    if (placing === true) { // place
+    var intersects = raycaster.intersectObject(plane);
+    if (intersects.length > 0) {
+      var newPuck = puck.clone();
+      newPuck.position.copy(intersects[0].point);
+      scene.add(newPuck);
+      pucks.push(newPuck);
+    }
+  } else { // delete
+    var intersects = raycaster.intersectObjects(pucks);
+    if (intersects.length > 0) {
+      thePuck = intersects[0].object;
+
+      //scene.remove(thePuck);
+      thePuck.removeFromParent();
+
+      // remove thePuck from pucks
+      for (let i = 0; i < pucks.length; i++) {
+        if (pucks[i] === thePuck) {
+          pucks.splice(i, 1);
+          break;
+        }
+      }
+
+    }
+
+  }
+  } 
+  
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+  render();
+
+  $('#debugMsg').text(pucks.length + ' items on plane');
+
+}
+
+function render() {
+  renderer.render(scene, camera);
+}
+
+
+</script>
