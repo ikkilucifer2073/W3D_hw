@@ -11,4 +11,6 @@
 
 :heavy_check_mark:[HW3](https://ikkilucifer2073.github.io/W3D_hw/hw3.html)
 
-:no_entry:HW4
+:heavy_check_mark:[HW4](https://ikkilucifer2073.github.io/W3D_hw/hw4.html)
+
+:no_entry:HW5
