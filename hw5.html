@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<div id="info">I4A46-Homework 5</div>
+<div id="info">______________________________________________________</div>
+<script src="https://threejs.org/build/three.min.js"></script>
+<style>
+
+#info {
+  position: relative;
+  top: 0px;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  font-family: courier;
+  font-size:40px;
+  color: black;
+}
+
+body {
+  overflow: hidden;
+}
+#ball {
+  background-color: lightgrey;
+  width: 300px;
+  border: 15px solid green;
+  padding: 50px;
+  margin: 20px;
+  position: relative;
+  top:30px;
+  left:30px;
+}
+input[type="range"]{
+  -webkit-appearance: none;
+  overflow:hidden;     /* 限定範圍 */
+  width:200px;
+  height:20px;
+  outline : none;      /* 避免點選會有藍線或虛線 */
+  background:none;
+}
+input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance: none;
+  position: relative;/* 設為相對位置，為了前後區塊的絕對位置而設定 */
+  width:10px;
+  height:10px;
+  background:#3399ff;
+  border-radius:50%;
+  transition:.2s;        /* 點選放大時候的漸變時間 */
+}
+input[type="range"]::-webkit-slider-thumb:before,
+input[type="range"]::-webkit-slider-thumb:after
+{
+  position: absolute;
+  top: 3px;
+  width: 2000px;          /* 長度很長沒關係，因為剛剛有用 overflow:hidden 了 */
+  height: 4px;
+  content:"";
+  pointer-events: none;   /* 讓滑鼠可以點擊穿透偽元素，不然會點不到下面 */
+  transition:.2s;
+}
+
+input[type="range"]::-webkit-slider-thumb:before{
+  left: -1997px;
+  background: #3399ff;
+}
+input[type="range"]::-webkit-slider-thumb:after {
+  left: 10px;
+  background: #cce6ff;
+}
+input[type="range"]:active::-webkit-slider-thumb:before,
+input[type="range"]:active::-webkit-slider-thumb:after
+{
+  top: 6px;
+}
+
+input[type="range"]:active::-webkit-slider-thumb{
+  width:16px;
+  height:16px;
+}
+
+input[type="range"]:active::-webkit-slider-thumb:after {
+  left: 16px;
+}
+</style>
+
+
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<script id="ball">
+var camera, scene, renderer;
+var circle, pos, vel;
+
+init();
+animate();
+
+function init() {
+
+  scene = new THREE.Scene();
+
+  renderer = new THREE.WebGLRenderer();
+  renderer.setSize(600, 600);
+  renderer.setClearColor(0x888888);
+  document.body.appendChild(renderer.domElement);
+
+  camera = new THREE.OrthographicCamera(-50, 50, 50, -50, -5, 50);
+  camera.position.z = 50;
+
+  ////////////////////////////////////////////////////////
+  var gridXZ = new THREE.GridHelper(100, 20, 'red', 'white');
+  gridXZ.rotation.x = Math.PI / 2;
+  scene.add(gridXZ);
+
+  let geometry = new THREE.BufferGeometry();
+  let points = [];
+  points.push(
+    new THREE.Vector3(-50, -50, 0),
+    new THREE.Vector3(50, -50, 0),
+    new THREE.Vector3(50, 50, 0),
+    new THREE.Vector3(-50, 50, 0),
+    new THREE.Vector3(-50, -50, 0));
+  geometry.setFromPoints(points);
+  var border = new THREE.Line(geometry, new THREE.LineBasicMaterial({
+    color: 'blue'
+  }));
+  scene.add(border);
+
+  circle = new THREE.Mesh(new THREE.CircleGeometry(10, 40, 40), new THREE.MeshBasicMaterial({
+    color: 'yellow'
+  }));
+  scene.add(circle);
+
+  pos = new THREE.Vector3();
+  vel = new THREE.Vector3(10, 20);
+}
+
+function animate() {
+  var dt = 0.05;
+  requestAnimationFrame(animate);
+  renderer.render(scene, camera);
+
+  pos.add(vel.clone().multiplyScalar(dt));
+  if (pos.x > 40 || pos.x < -40)
+    vel.x *= -1;
+  if (pos.y > 40 || pos.y < -40)
+    vel.y *= -1;
+
+  if (pos.x > 0)
+    circle.material.color.set('cyan');
+  else
+    circle.material.color.set('yellow');
+
+  circle.position.copy(pos);
+}
+
+</script>
+<input type="range" min="0" max="100" step="1" value="50">
+
+</html>
